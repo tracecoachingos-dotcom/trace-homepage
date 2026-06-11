@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRACE by Grow in Coaching</title>
+    <style>
+        :root {
+            --primary: #1C352D;
+            --primary-deep: #11221D;
+            --accent: #D4E9B9;
+            --accent-mid: #346040;
+            --bg: #F9F9F6;
+            --white: #FFFFFF;
+            --text: #2C3E35;
+            --muted: #66756e;
+
+            /* Architecture card 개별 컬러 */
+            --signal-bg: #EAF3DE;
+            --signal-icon: #3B6D11;
+            --signal-border: #639922;
+
+            --reflection-bg: #FFF8ED;
+            --reflection-icon: #854F0B;
+            --reflection-border: #BA7517;
+
+            --ripening-bg: #E6F1FB;
+            --ripening-icon: #0C447C;
+            --ripening-border: #378ADD;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Noto Sans KR', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        body { background-color: var(--bg); color: var(--text); line-height: 1.7; }
+        a { text-decoration: none; color: inherit; }
+        li { list-style: none; }
+
+        /* ── NAV ── */
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background-color: rgba(249, 249, 246, 0.92);
+            backdrop-filter: blur(12px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 8%; z-index: 1000;
+            border-bottom: 1px solid rgba(28, 53, 45, 0.06);
+        }
+        .logo { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+        .logo span { font-weight: 300; font-size: 0.88rem; opacity: 0.7; }
+        .nav-right { display: flex; align-items: center; gap: 40px; }
+        .nav-links { display: flex; gap: 36px; }
+        .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--muted); transition: color 0.25s; }
+        .nav-links a:hover { color: var(--primary); }
+        .lang-btn {
+            background: transparent; border: 1px solid var(--primary);
+            color: var(--primary); padding: 6px 14px; border-radius: 20px;
+            cursor: pointer; font-size: 0.78rem; font-weight: 600; transition: all 0.25s;
+        }
+        .lang-btn:hover { background: var(--primary); color: var(--white); }
+
+        /* ── HERO ── */
+        .hero {
+            background-color: var(--primary);
+            color: var(--white);
+            min-height: 88vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center; padding: 120px 8% 80px;
+        }
+        .hero-icon {
+            width: 88px; height: 88px; border-radius: 22px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            background-color: var(--accent);
+        }
+        .hero h1 {
+            font-size: 3.4rem; font-weight: 700;
+            line-height: 1.35; margin-bottom: 22px;
+            word-break: keep-all;
+        }
+        .hero .sub {
+            font-size: 0.95rem; font-weight: 400;
+            color: rgba(255,255,255,0.55);
+            letter-spacing: 0.1em; text-transform: uppercase;
+            margin-bottom: 48px;
+        }
+        .hero .btn {
+            background-color: var(--accent); color: var(--primary);
+            padding: 15px 34px; border-radius: 30px;
+            font-weight: 700; font-size: 0.95rem; transition: all 0.25s;
+            display: inline-block;
+        }
+        .hero .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.18); }
+
+        /* ── PHILOSOPHY BRIDGE ── */
+        .philosophy-bridge {
+            background-color: var(--white); text-align: center;
+            padding: 80px 8%;
+            border-bottom: 1px solid rgba(28,53,45,0.04);
+        }
+        .philosophy-bridge blockquote {
+            font-size: 1.5rem; font-weight: 400;
+            color: var(--primary); line-height: 1.65;
+            max-width: 820px; margin: 0 auto;
+            border: none; padding: 0;
+        }
+        .bridge-italic-wrap {
+            display: inline-block;
+            position: relative;
+        }
+        .bridge-italic {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--primary);
+            word-break: normal;
+            overflow-wrap: normal;
+            hyphens: none;
+        }
+        .bridge-source {
+            display: block;
+            text-align: right;
+            font-size: 0.75rem;
+            color: #aab5af;
+            font-style: normal;
+            font-family: 'Pretendard', sans-serif;
+            margin-top: 10px;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── SECTION COMMONS ── */
+        section { padding: 120px 8% 90px; }
+        .section-title {
+            font-size: 2rem; font-weight: 700;
+            text-align: center; color: var(--primary);
+            margin-bottom: 16px;
+            display: block;
+        }
+        .credentials .section-title { color: var(--white); }
+        .section-sub {
+            text-align: center; color: var(--muted);
+            font-size: 1rem; margin-bottom: 64px;
+            word-break: keep-all;
+        }
+
+        /* ── ABOUT ── */
+        .about { background-color: var(--bg); }
+        .about-wrapper {
+            max-width: 1000px; margin: 0 auto;
+            display: grid; grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px; align-items: start;
+        }
+        .about-text h3 {
+            font-size: 1.55rem; color: var(--primary);
+            font-weight: 700; margin-bottom: 20px;
+        }
+        .about-text p {
+            font-size: 1rem; color: var(--text);
+            margin-bottom: 18px; word-break: keep-all;
+        }
+        .about-services {
+            background-color: var(--white); padding: 36px;
+            border-radius: 16px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.03);
+            border-top: 4px solid var(--primary);
+        }
+        .about-services h4 {
+            font-size: 1rem; font-weight: 700;
+            color: var(--primary); margin-bottom: 28px;
+        }
+        .service-item {
+            display: flex; gap: 14px;
+            margin-bottom: 20px; align-items: flex-start;
+        }
+        .service-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background-color: var(--accent-mid);
+            flex-shrink: 0; margin-top: 9px;
+        }
+        .service-item strong {
+            display: block; font-size: 0.97rem;
+            color: var(--primary); margin-bottom: 2px;
+        }
+        .service-item span { font-size: 0.88rem; color: var(--muted); }
+
+        /* ── TRACE SECTION ── */
+        .features { background-color: var(--white); }
+
+        .trace-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 80px;
+            align-items: center;
+            max-width: 1060px;
+            margin: 0 auto;
+        }
+
+        /* 모바일 목업 */
+        .mockup-wrap {
+            display: flex;
+            justify-content: center;
+        }
+        .phone-frame {
+            width: 240px;
+            height: 490px;
+            background: #1C352D;
+            border-radius: 38px;
+            padding: 14px 12px;
+            box-shadow:
+                0 30px 80px rgba(28,53,45,0.22),
+                0 0 0 1px rgba(255,255,255,0.06) inset;
+            position: relative;
+        }
+        .phone-notch {
+            width: 70px; height: 18px;
+            background: #0e1f1a;
+            border-radius: 0 0 12px 12px;
+            margin: 0 auto 10px;
+        }
+        .phone-screen {
+            background: var(--bg);
+            border-radius: 26px;
+            height: calc(100% - 28px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .app-header {
+            background: var(--primary);
+            padding: 14px 16px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .app-logo-text {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: 0.12em;
+        }
+        .app-date {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.5);
+        }
+        .app-body {
+            flex: 1;
+            padding: 18px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .app-message-bubble {
+            background: var(--white);
+            border-radius: 4px 14px 14px 14px;
+            padding: 12px 13px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .app-message-bubble p {
+            font-size: 0.7rem;
+            color: var(--text);
+            line-height: 1.55;
+        }
+        .app-input-area {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border: 1px solid rgba(28,53,45,0.08);
+        }
+        .app-cursor-line {
+            height: 8px;
+            background: #dde8e2;
+            border-radius: 4px;
+            width: 90%;
+        }
+        .app-cursor-line.short { width: 55%; }
+        .app-signal-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--signal-bg);
+            border-radius: 8px;
+        }
+        .signal-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: var(--signal-icon);
+            letter-spacing: 0.08em;
+        }
+        .signal-dots { display: flex; gap: 4px; }
+        .dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #c8ddb8;
+        }
+        .dot.active { background: var(--signal-icon); }
+        .app-echo-badge {
+            background: var(--primary);
+            border-radius: 10px;
+            padding: 10px 13px;
+            text-align: center;
+        }
+        .app-echo-badge span {
+            font-size: 0.65rem;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        /* 우측 작동 원리 */
+        .how-it-works {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        .hiw-item {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+        .hiw-icon-box {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .signal-box { background: var(--signal-bg); }
+        .reflection-box { background: var(--reflection-bg); }
+        .ripening-box { background: var(--ripening-bg); }
+
+        .hiw-num {
+            font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .signal-num { color: var(--signal-icon); }
+        .reflection-num { color: var(--reflection-icon); }
+        .ripening-num { color: var(--ripening-icon); }
+
+        .hiw-text h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .hiw-text p {
+            font-size: 0.9rem;
+            color: #52635a;
+            line-height: 1.65;
+            word-break: keep-all;
+        }
+
+        /* 구분선 */
+        .hiw-item + .hiw-item {
+            padding-top: 32px;
+            border-top: 1px solid rgba(28,53,45,0.07);
+        }
+
+        @media (max-width: 900px) {
+            .trace-layout {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+            .mockup-wrap { order: -1; }
+        }
+
+        /* ── CREDENTIALS ── */
+        .credentials {
+            background-color: var(--primary); color: var(--white);
+            text-align: center;
+        }
+        .credentials .section-sub { color: rgba(255,255,255,0.65); }
+        .cert-row { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+        .cert-card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; padding: 28px 40px;
+            min-width: 200px;
+        }
+        .cert-card h4 { font-size: 1.35rem; color: var(--accent); margin-bottom: 6px; }
+        .cert-card p { font-size: 0.88rem; color: rgba(255,255,255,0.65); }
+
+        /* ── CONTACT ── */
+        .contact-inner { max-width: 580px; margin: 0 auto; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block; font-size: 0.88rem; font-weight: 600;
+            color: var(--primary); margin-bottom: 8px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 13px 14px;
+            border: 1px solid #dde3df;
+            background: var(--white); border-radius: 8px;
+            font-size: 0.94rem; outline: none; transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); }
+        .submit-btn {
+            width: 100%; background: var(--primary); color: var(--white);
+            padding: 15px; border: none; border-radius: 8px;
+            font-size: 0.97rem; font-weight: 700; cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .submit-btn:hover { opacity: 0.88; }
+
+        /* ── FOOTER ── */
+        footer {
+            background-color: var(--primary-deep); color: #8A9893;
+            padding: 60px 8%; font-size: 0.84rem; line-height: 1.9;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .footer-grid {
+            max-width: 1100px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            gap: 40px;
+        }
+        .footer-brand { flex: 0 0 auto; }
+        .footer-brand h2 { color: var(--white); font-size: 1rem; margin-bottom: 10px; }
+        .footer-brand p { font-size: 0.82rem; color: #5C6A65; line-height: 1.7; }
+        .footer-info { text-align: left; flex: 0 0 auto; }
+        .footer-info p { margin-bottom: 2px; }
+        .footer-bottom {
+            max-width: 1100px; margin: 28px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.78rem; color: #4A5A54;
+            text-align: left;
+        }
+
+        /* ── LANG ── */
+        .lang-en { display: none; }
+
+        @media (max-width: 768px) {
+            .about-wrapper { grid-template-columns: 1fr; }
+            .footer-grid { flex-direction: column; align-items: flex-start; }
+            .footer-info { text-align: left; }
+            .footer-bottom { text-align: left; }
+            .hero h1 { font-size: 2.3rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">TRACE <span>by Grow in Coaching</span></div>
+    <div class="nav-right">
+        <div class="nav-links">
+            <a href="#about" class="lang-ko">회사 소개</a>
+            <a href="#about" class="lang-en">About Us</a>
+            <a href="#features" class="lang-ko">TRACE</a>
+            <a href="#features" class="lang-en">TRACE</a>
+            <a href="#credentials" class="lang-ko">검증된 전문성</a>
+            <a href="#credentials" class="lang-en">Verified Expertise</a>
+            <a href="#contact" class="lang-ko">문의하기</a>
+            <a href="#contact" class="lang-en">Contact</a>
+        </div>
+        <button class="lang-btn" onclick="toggleLanguage()">English</button>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <img src="TRACE%EC%95%B1%EC%95%84%EC%9D%B4%EC%BD%98_1024%20x%201024px%20PNG%20%EC%B5%9C%EC%A2%85.png"
+         alt="TRACE Icon" class="hero-icon"
+         onerror="this.src=''; this.style.background='linear-gradient(135deg, #346040 0%, #D4E9B9 100%)'; this.style.display='block';">
+
+    <h1 class="lang-ko">생각은 남기고<br>변화는 기다립니다</h1>
+    <h1 class="lang-en" style="display:none;">Signals emerge<br>Change follows</h1>
+
+    <p class="sub lang-ko">AI 기반 Reflective Coaching Platform</p>
+    <p class="sub lang-en" style="display:none;">AI-Powered Reflective Coaching Platform</p>
+
+    <a href="#features" class="btn lang-ko">TRACE 시스템 확인하기</a>
+    <a href="#features" class="btn lang-en" style="display:none;">Explore TRACE OS</a>
+</section>
+
+<!-- ── PHILOSOPHY BRIDGE ── -->
+<div class="philosophy-bridge">
+    <blockquote class="lang-ko"><span class="bridge-italic-wrap"><span class="bridge-italic">"There must be time. Let it first blossom, then bear fruit, then ripen."</span><span class="bridge-source">— Epictetus, Discourses I</span></span></blockquote>
+    <blockquote class="lang-en" style="display:none;"><span class="bridge-italic-wrap"><span class="bridge-italic">"There must be time. Let it first blossom, then bear fruit, then ripen."</span><span class="bridge-source">— Epictetus, Discourses I</span></span></blockquote>
+</div>
+
+<!-- ── ABOUT ── -->
+<section id="about" class="about">
+    <h2 class="section-title lang-ko">회사 소개</h2>
+    <h2 class="section-title lang-en" style="display:none;">About Us</h2>
+    <p class="section-sub lang-ko">인간의 변화를 기다리는 시스템을 만듭니다</p>
+    <p class="section-sub lang-en" style="display:none;">Designing Systems for Human Growth</p>
+
+    <div class="about-wrapper">
+        <div class="about-text">
+            <h3 class="lang-ko">성찰과 변화를 위한 운영체계</h3>
+            <h3 class="lang-en" style="display:none;">Reflection &amp; Coaching OS</h3>
+
+            <p class="lang-ko">그로우인코칭(Grow in Coaching)은 전문 코칭 역량과 AI 기술을 결합하여 사람의 성찰과 변화 과정을 지원하는 AI 기반 Reflective Coaching Platform을 개발합니다.</p>
+            <p class="lang-ko">우리는 더 많은 질문이나 더 빠른 개입보다, 구성원이 스스로 무르익는 적절한 시점의 의미 있는 개입이 진정한 변화를 만든다고 믿습니다.</p>
+
+            <p class="lang-en" style="display:none;">Grow in Coaching develops reflection and coaching systems that combine professional coaching expertise with AI. We believe meaningful change comes not from constant intervention, but from the right intervention at the right moment.</p>
+        </div>
+        <div>
+            <div class="about-services">
+                <h4 class="lang-ko">핵심 사업 영역</h4>
+                <h4 class="lang-en" style="display:none;">Core Expertise</h4>
+
+                <div class="lang-ko">
+                    <div class="service-item"><div class="service-dot"></div><div><strong>TRACE 플랫폼</strong><span>AI 기반 성찰·코칭 플랫폼</span></div></div>
+                    <div class="service-item"><div class="service-dot"></div><div><strong>임원 및 전문가 코칭</strong><span>리더 및 전문가 대상 프리미엄 코칭</span></div></div>
+                    <div class="service-item"><div class="service-dot"></div><div><strong>조직 리더십 개발</strong><span>조직 성장 및 리더십 개발 프로그램</span></div></div>
+                    <div class="service-item"><div class="service-dot"></div><div><strong>코칭 연구 및 콘텐츠</strong><span>코칭 연구 및 전문 지식 콘텐츠</span></div></div>
+                </div>
+                <div class="lang-en" style="display:none;">
+                    <div class="service-item"><div class="service-dot"></div><div><strong>TRACE Platform</strong><span>AI-powered Reflection &amp; Coaching OS</span></div></div>
+                    <div class="service-item"><div class="service-dot"></div><div><strong>Executive Coaching</strong><span>Coaching for leaders and professionals</span></div></div>
+                    <div class="service-item"><div class="service-dot"></div><div><strong>Leadership Development</strong><span>Organizational growth and leadership programs</span></div></div>
+                    <div class="service-item"><div class="service-dot"></div><div><strong>Research &amp; Content</strong><span>Coaching methodologies and publications</span></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── TRACE SECTION ── -->
+<section id="features" class="features">
+    <h2 class="section-title lang-ko">TRACE</h2>
+    <h2 class="section-title lang-en" style="display:none;">TRACE</h2>
+    <p class="section-sub lang-ko">의도된 고요함 속에서 스스로 도약할 수 있도록 설계된 AI 성찰 코칭 플랫폼입니다.</p>
+    <p class="section-sub lang-en" style="display:none;">An AI reflective coaching platform designed to support growth through intentional stillness.</p>
+
+    <div class="trace-layout">
+        <!-- 좌측: 모바일 목업 -->
+        <div class="mockup-wrap">
+            <div class="phone-frame">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                    <!-- 앱 UI 시뮬레이션 -->
+                    <div class="app-header">
+                        <span class="app-logo-text">TRACE</span>
+                        <span class="app-date lang-ko">오늘의 성찰</span>
+                        <span class="app-date lang-en" style="display:none;">Today's Reflection</span>
+                    </div>
+                    <div class="app-body">
+                        <div class="app-message-bubble">
+                            <p class="lang-ko">지금 가장 머릿속을 맴도는 생각을 적어보세요.</p>
+                            <p class="lang-en" style="display:none;">Write down what's been on your mind.</p>
+                        </div>
+                        <div class="app-input-area">
+                            <div class="app-cursor-line"></div>
+                            <div class="app-cursor-line short"></div>
+                        </div>
+                        <div class="app-signal-bar">
+                            <span class="signal-label lang-ko">Signal</span>
+                            <span class="signal-label lang-en" style="display:none;">Signal</span>
+                            <div class="signal-dots">
+                                <span class="dot active"></span>
+                                <span class="dot active"></span>
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                        <div class="app-echo-badge">
+                            <span class="lang-ko">✦ Echo가 곧 도착합니다</span>
+                            <span class="lang-en" style="display:none;">✦ Echo is on its way</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 우측: 작동 원리 3가지 -->
+        <div class="how-it-works">
+            <div class="hiw-item signal-item">
+                <div class="hiw-icon-box signal-box">
+                    <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="22" r="3" fill="#3B6D11"/>
+                        <path d="M10 17.5C11.5 13 16 13 16 13C20.5 13 22 17.5 22 17.5" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        <path d="M6 14C8.5 7 16 7 16 7C23.5 7 26 14 26 14" stroke="#639922" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+                        <path d="M2.5 10.5C6 1 16 1 16 1C26 1 29.5 10.5 29.5 10.5" stroke="#639922" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.25"/>
+                    </svg>
+                </div>
+                <div class="hiw-text">
+                    <div class="hiw-num signal-num">01 — Signal</div>
+                    <h3 class="lang-ko">신호 감지</h3>
+                    <h3 class="lang-en" style="display:none;">Signal Detection</h3>
+                    <p class="lang-ko">남겨진 생각 속에서 미세한 행동 변화와 의미 있는 신호를 발견합니다.</p>
+                    <p class="lang-en" style="display:none;">Meaningful patterns emerge from accumulated thoughts and subtle behavioral shifts.</p>
+                </div>
+            </div>
+
+            <div class="hiw-item reflection-item">
+                <div class="hiw-icon-box reflection-box">
+                    <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 4 A12 12 0 0 1 16 28 Z" fill="#854F0B" opacity="0.15"/>
+                        <path d="M16 4 A12 12 0 0 1 16 28" stroke="#854F0B" stroke-width="2" fill="none"/>
+                        <path d="M16 4 A12 12 0 0 0 16 28" stroke="#BA7517" stroke-width="1.5" stroke-dasharray="3 3" fill="none"/>
+                        <line x1="16" y1="2" x2="16" y2="30" stroke="#854F0B" stroke-width="1" opacity="0.3"/>
+                        <circle cx="20" cy="10" r="1.5" fill="#BA7517" opacity="0.7"/>
+                    </svg>
+                </div>
+                <div class="hiw-text">
+                    <div class="hiw-num reflection-num">02 — Reflection</div>
+                    <h3 class="lang-ko">조건부 개입</h3>
+                    <h3 class="lang-en" style="display:none;">Conditional Intervention</h3>
+                    <p class="lang-ko">충분히 무르익은 순간에만 성찰을 이끄는 질문이 조용히 도착합니다.</p>
+                    <p class="lang-en" style="display:none;">A guiding question arrives quietly — only when the moment is truly ripe.</p>
+                </div>
+            </div>
+
+            <div class="hiw-item ripening-item">
+                <div class="hiw-icon-box ripening-box">
+                    <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="13" stroke="#378ADD" stroke-width="1" opacity="0.25" fill="none"/>
+                        <circle cx="16" cy="16" r="9" stroke="#185FA5" stroke-width="1.5" opacity="0.45" fill="none"/>
+                        <circle cx="16" cy="16" r="5" stroke="#0C447C" stroke-width="2" fill="none"/>
+                        <circle cx="16" cy="16" r="2" fill="#0C447C"/>
+                    </svg>
+                </div>
+                <div class="hiw-text">
+                    <div class="hiw-num ripening-num">03 — Ripening</div>
+                    <h3 class="lang-ko">무르익음</h3>
+                    <h3 class="lang-en" style="display:none;">Ripening</h3>
+                    <p class="lang-ko">변화가 지속 가능한 행동이 될 때까지 일시적 각성을 넘어 조용히 동반합니다.</p>
+                    <p class="lang-en" style="display:none;">Growth continues silently until insights naturally transform into lasting action.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── CREDENTIALS ── -->
+<section id="credentials" class="credentials">
+    <h2 class="section-title lang-ko">검증된 전문성</h2>
+    <h2 class="section-title lang-en" style="display:none;">Verified Expertise</h2>
+    <p class="section-sub lang-ko">TRACE는 ICF PCC 및 한국코치협회 KSC 자격을 보유한 전문가의 임상 철학을 바탕으로 고안되었습니다.</p>
+    <p class="section-sub lang-en" style="display:none;">TRACE is anchored upon the clinical expertise of coaches accredited by ICF and KCA.</p>
+
+    <div class="cert-row">
+        <div class="cert-card">
+            <h4>ICF PCC</h4>
+            <p class="lang-ko">국제코칭연맹 공인 전문코치</p>
+            <p class="lang-en" style="display:none;">International Coaching Federation</p>
+        </div>
+        <div class="cert-card">
+            <h4>KSC</h4>
+            <p class="lang-ko">(사)한국코치협회 인증코치</p>
+            <p class="lang-en" style="display:none;">Korea Coach Association</p>
+        </div>
+        <div class="cert-card">
+            <h4>1,800+ Hours</h4>
+            <p class="lang-ko">검증된 비즈니스 코칭 경험</p>
+            <p class="lang-en" style="display:none;">Verified Coaching Experience</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+    <h2 class="section-title lang-ko">문의하기</h2>
+    <h2 class="section-title lang-en" style="display:none;">Contact Us</h2>
+    <p class="section-sub lang-ko">TRACE 관련 문의 및 협업 제안은 아래로 보내주세요.</p>
+    <p class="section-sub lang-en" style="display:none;">Send your inquiries and collaboration proposals below.</p>
+
+    <div class="contact-inner">
+        <div class="form-group">
+            <a href="https://forms.gle/cqudGTwtM2nzrjJq8" target="_blank" class="submit-btn lang-ko" style="display:block; text-align:center; text-decoration:none; padding:16px;">TRACE 관련 문의하기</a>
+            <a href="https://forms.gle/cqudGTwtM2nzrjJq8" target="_blank" class="submit-btn lang-en" style="display:none; text-align:center; text-decoration:none; padding:16px;">Submit Inquiry</a>
+        </div>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="footer-grid lang-ko">
+        <div class="footer-brand">
+            <h2>TRACE by Grow in Coaching</h2>
+            <p>인간의 주도적 성장과<br>내면의 무르익음을 지원합니다.</p>
+        </div>
+        <div class="footer-info">
+            <p><strong>상호명:</strong> 그로우인코칭 (Grow in Coaching)</p>
+            <p><strong>대표자:</strong> 박연희 &nbsp;|&nbsp; <strong>사업자등록번호:</strong> 707-59-00507</p>
+            <p><strong>사업장 주소:</strong> 서울특별시 금천구 금하로 816</p>
+            <p><strong>주요업태:</strong> 기타 교육지원 서비스업, 전자상거래업 등</p>
+            <p><strong>이메일:</strong> tracecoachingos@gmail.com</p>
+        </div>
+    </div>
+    <div class="footer-bottom lang-ko">© 2026 TRACE by Grow in Coaching. All Rights Reserved.</div>
+
+    <div class="footer-grid lang-en" style="display:none;">
+        <div class="footer-brand">
+            <h2>TRACE by Grow in Coaching</h2>
+            <p>Supporting autonomous growth and<br>internal ripening of individuals.</p>
+        </div>
+        <div class="footer-info">
+            <p><strong>Company:</strong> Grow in Coaching</p>
+            <p><strong>Representative:</strong> Yeonhee Park &nbsp;|&nbsp; <strong>Business ID:</strong> 707-59-00507</p>
+            <p><strong>Address:</strong> 816 Geumha-ro, Geumcheon-gu, Seoul, Republic of Korea</p>
+            <p><strong>Business Type:</strong> Other training institutes, E-commerce</p>
+            <p><strong>Email:</strong> tracecoachingos@gmail.com</p>
+        </div>
+    </div>
+    <div class="footer-bottom lang-en" style="display:none;">© 2026 TRACE by Grow in Coaching. All Rights Reserved.</div>
+</footer>
+
+<script>
+let currentLang = 'ko';
+function toggleLanguage() {
+    const btn = document.querySelector('.lang-btn');
+    const ko = document.querySelectorAll('.lang-ko');
+    const en = document.querySelectorAll('.lang-en');
+
+    if (currentLang === 'ko') {
+        ko.forEach(el => el.style.display = 'none');
+        en.forEach(el => {
+            if (el.classList.contains('footer-grid')) {
+                el.style.display = 'flex';
+            } else if (el.classList.contains('about-wrapper')) {
+                el.style.display = 'grid';
+            } else {
+                el.style.display = 'block';
+            }
+        });
+        btn.innerText = '한국어';
+        document.documentElement.lang = 'en';
+        currentLang = 'en';
+    } else {
+        en.forEach(el => el.style.display = 'none');
+        ko.forEach(el => {
+            if (el.classList.contains('footer-grid')) {
+                el.style.display = 'flex';
+            } else if (el.classList.contains('about-wrapper')) {
+                el.style.display = 'grid';
+            } else {
+                el.style.display = 'block';
+            }
+        });
+        btn.innerText = 'English';
+        document.documentElement.lang = 'ko';
+        currentLang = 'ko';
+    }
+}
+
+// 앱 아이콘 파일명 후보 순서대로 시도
+(function() {
+    const icon = document.querySelector('.hero-icon');
+    if (!icon) return;
+    const candidates = [
+        'TRACE앱아이콘_1024 x 1024px PNG 최종.png',
+        'TRACE_icon.png',
+        'trace_icon.png',
+        'icon.png'
+    ];
+    let idx = 0;
+    function tryNext() {
+        if (idx >= candidates.length) {
+            icon.style.background = 'linear-gradient(135deg, #346040 0%, #D4E9B9 100%)';
+            icon.src = '';
+            return;
+        }
+        icon.src = candidates[idx++];
+        icon.onerror = tryNext;
+    }
+    tryNext();
+})();
+</script>
+</body>
+</html>
